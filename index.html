@@ -61,16 +61,16 @@
                 <h1 class="text-center"> Simple Music Theory Calculator </h1><br>
             </div>
             <div class="row justify-content-center">
-                <select id="regions">
+                <label for="salary">Net. Salary:</label>
+                <input type="number" step="" id="salary" name="salary" oninput="javascript:GetNumberStep(id,value)">
+                
+                <select id="currencies">
                     <script type="text/javascript">
-                        ReadElements("regions", _regions)
+                        ReadElements("currencies", _currencies)
                     </script>
                 </select>&nbsp;
+                <select id="regions"><script type="text/javascript">ReadElements("regions", _regions)</script></select>&nbsp;
 
-                <select id="scale_type">
-                    <option value="minor">Minor</option>
-                    <option value="major" selected="selected">Major</option>
-                </select>&nbsp;
                 <button onClick="calculate()">Calculate</button>
             </div>
 

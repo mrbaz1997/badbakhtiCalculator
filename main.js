@@ -10,9 +10,16 @@ function submit_informations(currency_index, net_income)
     
 }
 
-function ReadElements(id, list) {
-    console.log(id)
+function ReadElements(id,list) {
+  
     for (var i = 0; i < list.length; i++) {
         document.getElementById(id).options.add(new Option(list[i], i))
     }
+}
+
+function GetNumberStep(id,value){
+    console.log(id)
+    console.log(value)
+    let counter = Math.floor(Math.log10(value))
+    document.getElementById(id).step = (10**(counter-2))*5
 }
