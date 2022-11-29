@@ -1,5 +1,5 @@
 let _regions = ["Iran", "Netherlands", "Denmark", "Germany"]
-let _currencies = { "USD": 1, "TOMAN": 35000, "EUR": 1.1, "DKK": 7 }
+let _currencies = { "USD": 1, "TOMAN": 35000, "EUR": 0.97, "DKK": 7.2 }
 let _currency_values = [35000, 1000]
 
 let _goods = ["coca", "small pizza", "family pizza", "206", "IPhone 13 Pro Max", "galaxy s22 ultra", "condom", "home rent", "hoodie", "wine bottle", "cinema ticket", "laptop 3080", "macbook", "macDonald sandwich", "steam game"]
@@ -40,6 +40,7 @@ function GetNumberStep(id, value) {
     _net_income = value
     let counter = Math.floor(Math.log10(value))
     document.getElementById(id).step = (10 ** (counter - 2)) * 5
+    Calculate()
 }
 
 function InitialJson() {
@@ -51,14 +52,17 @@ function InitialJson() {
 
 function SetCurrency(value) {
     _selected_currency = value
+    Calculate()
 }
 
 function SetRegion(value) {
     _selected_region = value
+    Calculate()
 }
 
 function SetTime(value) {
     _selected_time = value
+    Calculate()
 }
 
 function Calculate() {
@@ -86,7 +90,7 @@ function CalculateGoodCounts(price) {
     console.log(_selected_time)
     console.log()
     var time = GetValueByIndex(_times, _selected_time)
-    return Math.floor(((_net_income / GetValueByIndex(_currencies, _selected_currency) / 30) / price) * time)
+    return (((_net_income / GetValueByIndex(_currencies, _selected_currency) / 30) / price) * time).toFixed(2)
 }
 
 function GetValueByIndex(dict, index) {
