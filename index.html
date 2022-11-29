@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Simple Music Theory Calculator</title>
+    <title>Badbakhti Calculator</title>
     <link rel="stylesheet" href="style.css">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -64,33 +64,36 @@
             <div class="row justify-content-center">
                 <label for="salary">Net. Salary:</label>
                 <input type="number" step="" id="salary" name="salary" oninput="javascript:GetNumberStep(id,value);">
-                
+
                 <select id="currencies" onchange="SetCurrency(value)">
                     <script type="text/javascript">
                         ReadDict("currencies", _currencies)
+                        InitialJson()
                     </script>
                 </select>&nbsp;
-                <select id="regions" onchange="SetRegion(value)"><script type="text/javascript">ReadElements("regions", _regions)</script></select>&nbsp;
-
-                <button id="Calculate" onclick="Calculate()">Calculate</button>
+                <select id="regions" onchange="SetRegion(value)">
+                    <script type="text/javascript">ReadElements("regions", _regions)</script>
+                </select>&nbsp;
             </div>
 
         </div>
 
     </div>
-    
-<div class="container">
-	<table id="table">
-		<thead>
-			<tr>
-				<th>Goods</th>
-				<th>count you can buy in one <select id="times" onchange="SetTime(value)"><script type="text/javascript">ReadDict("times",_times)</script></select></th>
-			</tr>
-		</thead>
-		<tbody id="tableBody">
-		</tbody>
-	</table>
-</div>
+
+    <div class="container">
+        <table id="table">
+            <thead>
+                <tr>
+                    <th >Goods</th>
+                    <th >count you can buy in one <select id="times" onchange="SetTime(value)">
+                            <script type="text/javascript">ReadDict("times", _times)</script>
+                        </select></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+            </tbody>
+        </table>
+    </div>
 
 </body>
 

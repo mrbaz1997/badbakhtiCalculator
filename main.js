@@ -1,3 +1,4 @@
+
 let _regions = ["Iran", "Netherlands", "Denmark", "Germany"]
 let _currencies = { "USD": 1, "TOMAN": 35000, "EUR": 0.97, "DKK": 7.2 }
 let _currency_values = [35000, 1000]
@@ -13,7 +14,7 @@ let _selected_currency = 0
 let _selected_time = 0
 
 _full_goods_data = []
-
+acce = true
 function submit_informations(currency_index, net_income) {
 
 }
@@ -22,15 +23,11 @@ function ReadElements(id, list) {
     for (var i = 0; i < list.length; i++) {
         document.getElementById(id).options.add(new Option(list[i], i))
     }
-    InitialJson()
 }
 
 function ReadDict(id, dict) {
-
     var counter = 0
-
     for (const value in dict) {
-        console.log(value)
         document.getElementById(id).options.add(new Option(value, counter))
         counter++
     }
@@ -45,7 +42,7 @@ function GetNumberStep(id, value) {
 
 function InitialJson() {
     for (let i = 0; i < _goods.length; i++) {
-        _full_goods_data.push({ "good": _goods[i],"prices" : [ _iran_price[i], _netherlands_price[i] ]})
+        _full_goods_data.push({ "good": _goods[i], "prices": [_iran_price[i], _netherlands_price[i]] })
     }
     console.log(_full_goods_data)
 }
@@ -65,17 +62,13 @@ function SetTime(value) {
     Calculate()
 }
 
-function Calculate() {
-    var table = document.getElementById("tableBody");
-    while (table.rows.length > 0) {
-        table.deleteRow(0)
-    }
-    for (const key in _full_goods_data) {
-        var row = table.insertRow(table.rows.length)
-        AddCellToRow(row, 0, _full_goods_data[key].good)
-        AddCellToRow(row, 1, CalculateGoodCounts(_full_goods_data[key].prices[_selected_region]))
+function CreateCells() {
+    cells = {}
 
+    for (const key in _full_goods_data) {
+        cells[_full_goods_data[key].good] = CalculateGoodCounts(_full_goods_data[key].prices[_selected_region])
     }
+    return cells
 }
 
 function AddCellToRow(row, index, data) {
@@ -85,10 +78,6 @@ function AddCellToRow(row, index, data) {
 }
 
 function CalculateGoodCounts(price) {
-    console.log(_net_income)
-    console.log(price)
-    console.log(_selected_time)
-    console.log()
     var time = GetValueByIndex(_times, _selected_time)
     return (((_net_income / GetValueByIndex(_currencies, _selected_currency) / 30) / price) * time).toFixed(2)
 }
@@ -97,3 +86,75 @@ function GetValueByIndex(dict, index) {
     return dict[Object.keys(dict)[index]]
 }
 
+function GetKeyByIndex(dict, index) {
+    return Object.keys(dict)[index]
+}
+
+function Resort() {
+    acce = !acce
+    var sorted = CreateCells();
+    DrawTable(quickSort(sorted, 0, Object.keys(sorted).length - 1))
+}
+
+function Calculate() {
+    DrawTable(CreateCells())
+}
+
+function DrawTable(data){
+    var table = document.getElementById("tableBody");
+    while (table.rows.length > 0) {
+        table.deleteRow(0)
+    }
+
+console.log(data)
+    for (const key in data) {
+        var row = table.insertRow(table.rows.length)
+        AddCellToRow(row, 0, key)
+        AddCellToRow(row, 1,data[key])
+    }
+}
+
+
+function swap(items, leftIndex, rightIndex) {
+    var temp = GetValueByIndex(items, leftIndex);
+    items[GetKeyByIndex(items, leftIndex)] = GetValueByIndex(items, rightIndex);
+    items[GetKeyByIndex(items, rightIndex)] = temp;
+}
+function partition(items, left, right) {
+    var pivot = GetValueByIndex(items, Math.floor((right + left) / 2)), //middle element
+        i = left, //left pointer
+        j = right; //right pointer
+
+    console.log(pivot)
+    while (i <= j) {
+        while (GetValueByIndex(items, i) > pivot) {
+            i++;
+        }
+        while (GetValueByIndex(items, j) < pivot) {
+            j--;
+        }
+        if (i <= j) {
+            swap(items, i, j); //sawpping two elements
+            i++;
+            j--;
+        }
+    }
+    return i;
+}
+
+function quickSort(items, left, right) {
+    var index;
+    console.log(Object.keys(items).length)
+    if (Object.keys(items).length > 1) {
+        console.log(items)
+        index = partition(items, left, right); //index returned from partition
+        if (left < index - 1) { //more elements on the left side of the pivot
+            quickSort(items, left, index - 1);
+        }
+        if (index < right) { //more elements on the right side of the pivot
+            quickSort(items, index, right);
+        }
+    }
+
+    return items;
+}
