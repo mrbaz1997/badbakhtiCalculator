@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>Simple Music Theory Calculator</title>
+    <link rel="stylesheet" href="style.css">
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -26,10 +27,10 @@
         @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap');
 
         .notice {
-            padding: 15px;
+            /* padding: 15px; */
             background-color: #fafafa;
             border-left: 6px solid #7f7f84;
-            margin-bottom: 10px;
+            /* margin-bottom: 10px; */
             -webkit-box-shadow: 0 5px 8px -6px rgba(0, 0, 0, .2);
             -moz-box-shadow: 0 5px 8px -6px rgba(0, 0, 0, .2);
             box-shadow: 0 5px 8px -6px rgba(0, 0, 0, .2);
@@ -43,7 +44,7 @@
         html,
         body,
         .container {
-            height: 100%
+            height: 85%
         }
 
         body {
@@ -55,114 +56,46 @@
 
 <body>
 
-    <div class="container h-100 d-flex justify-content-center">
+    <div class="container h-50 d-flex justify-content-center">
         <div class="col my-auto" style="margin-top:3%">
             <div class="row">
-                <h1 class="text-center"> Simple Music Theory Calculator </h1><br>
+                <h1 class="text-center"> Badbakhti Calculator </h1><br>
             </div>
             <div class="row justify-content-center">
                 <label for="salary">Net. Salary:</label>
-                <input type="number" step="" id="salary" name="salary" oninput="javascript:GetNumberStep(id,value)">
+                <input type="number" step="" id="salary" name="salary" oninput="javascript:GetNumberStep(id,value);">
                 
-                <select id="currencies">
+                <select id="currencies" onchange="SetCurrency(value)">
                     <script type="text/javascript">
-                        ReadElements("currencies", _currencies)
+                        ReadDict("currencies", _currencies)
                     </script>
                 </select>&nbsp;
-                <select id="regions"><script type="text/javascript">ReadElements("regions", _regions)</script></select>&nbsp;
+                <select id="regions" onchange="SetRegion(value)"><script type="text/javascript">ReadElements("regions", _regions)</script></select>&nbsp;
 
-                <button onClick="calculate()">Calculate</button>
+                <button id="Calculate" onclick="Calculate()">Calculate</button>
             </div>
 
-        </div>
-
-
-
-        <div class="col my-auto" style="margin-top:2%">
-            <div id="content">
-
-                <div class="notice">
-                    <h3>Notes: &nbsp;</h3> <span id="notes"></span>
-                </div>
-                <div class="notice">
-                    <h3>Relative Scale: &nbsp;</h3> <span id="relative-scale"></span>
-                </div>
-                <div class="notice">
-                    <h3>Chords: &nbsp;</h3> <span id="chords"></span>
-                </div>
-            </div>
         </div>
 
     </div>
+    
+<div class="container">
+	<table id="table">
+		<thead>
+			<tr>
+				<th>Goods</th>
+				<th>count you can buy in one <select id="times" onchange="SetTime(value)"><script type="text/javascript">ReadDict("times",_times)</script></select></th>
+			</tr>
+		</thead>
+		<tbody id="tableBody">
+		</tbody>
+	</table>
+</div>
 
 </body>
 
 <script>
-
-
-
-    function calculate() {
-
-
-        document.getElementById("notes").innerHTML = ""
-        document.getElementById("relative-scale").innerHTML = ""
-        document.getElementById("chords").innerHTML = ""
-
-
-        var scale_type = document.getElementById("scale_type").value;
-
-
-        let notes = get_scale_notes(scale_name, scale_type)
-        let notes_alias = get_aliases(notes);
-        for (var i = 0; i < 8; i++) {
-            if (notes[i] != notes_alias[i])
-                document.getElementById("notes").innerHTML += notes[i] + "/" + notes_alias[i];
-            else
-                document.getElementById("notes").innerHTML += notes[i];
-
-            if (i != 7)
-                document.getElementById("notes").innerHTML += "&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;";
-
-        }
-
-        if (scale_type == "major")
-            document.getElementById("relative-scale").innerHTML += get_relative_minor_scale(scale_name);
-        else if (scale_type == "minor")
-            document.getElementById("relative-scale").innerHTML += get_relative_major_scale(scale_name);
-
-
-
-        let chords = get_chords(scale_name, scale_type)
-        for (var i = 0; i < 7; i++) {
-            document.getElementById("chords").innerHTML += "<strong>" + (i + 1) + ". " + Object.keys(chords[i]) + ": </strong> &nbsp;";
-
-            document.getElementById("chords").innerHTML += Object.values(chords[i]);
-            document.getElementById("chords").innerHTML += "&nbsp;";
-
-            if (i == 4) {
-                document.getElementById("chords").innerHTML += " (Dominant of Dominant: " + get_fifth(scale_name, scale_type, i, true) + "7)";
-            }
-            else {
-                document.getElementById("chords").innerHTML += " (";
-                document.getElementById("chords").innerHTML += "5↓: " + get_fifth(scale_name, scale_type, i, false);
-                document.getElementById("chords").innerHTML += ")";
-
-                if (i != 0)
-                    document.getElementById("chords").innerHTML += "&nbsp;,&nbsp;";
-                if (i != 0) {
-                    document.getElementById("chords").innerHTML += " (";
-                    document.getElementById("chords").innerHTML += "5↑: " + get_fifth(scale_name, scale_type, i, true);
-                    document.getElementById("chords").innerHTML += ")";
-
-                }
-
-
-            }
-            document.getElementById("chords").innerHTML += "<br>";
-
-        }
-
-    }
 </script>
+
 
 </html>
