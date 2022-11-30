@@ -1,6 +1,5 @@
 body {
     margin: 0;
-    background: linear-gradient(45deg, #49a09d, #5f2c82);
     font-family: sans-serif;
     font-weight: 100;
 }
@@ -41,3 +40,26 @@ td:hover:before {
     background-color: rgba(255, 255, 255, 0.2);
     z-index: -1;
 }
+
+body {
+	background: linear-gradient(-45deg, #991414, #183c3d, #23a6d5, #23d5ab,rgb(0, 16, 247));
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+	height: 100vh;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+#table input[type='number']{
+    width: 80px;
+} 

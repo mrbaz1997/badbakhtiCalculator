@@ -14,7 +14,8 @@ let _selected_currency = 0
 let _selected_time = 0
 
 _full_goods_data = []
-acce = true
+_cells = []
+ascendig = true
 function submit_informations(currency_index, net_income) {
 
 }
@@ -42,9 +43,9 @@ function GetNumberStep(id, value) {
 
 function InitialJson() {
     for (let i = 0; i < _goods.length; i++) {
-        _full_goods_data.push({ "good": _goods[i], "prices": [_iran_price[i], _netherlands_price[i]] })
+        _full_goods_data.push({"id":i, "good": _goods[i], "bought": 0, "prices": [_iran_price[i], _netherlands_price[i]] })
     }
-    console.log(_full_goods_data)
+    //console.log(_full_goods_data)
 }
 
 function SetCurrency(value) {
@@ -63,19 +64,15 @@ function SetTime(value) {
 }
 
 function CreateCells() {
-    cells = {}
-
+    var i = 0
     for (const key in _full_goods_data) {
-        cells[_full_goods_data[key].good] = CalculateGoodCounts(_full_goods_data[key].prices[_selected_region])
+        _cells[i] = {"id" : _full_goods_data[key].id, "goods": _full_goods_data[key].good, "bought": _full_goods_data[key].bought, "numbers": CalculateGoodCounts(_full_goods_data[key].prices[_selected_region]) }
+        i++;
     }
-    return cells
+    console.log(_cells);
+    return _cells
 }
 
-function AddCellToRow(row, index, data) {
-    var cell = row.insertCell(index);
-    var newText = document.createTextNode(data)
-    cell.appendChild(newText);
-}
 
 function CalculateGoodCounts(price) {
     var time = GetValueByIndex(_times, _selected_time)
@@ -86,75 +83,92 @@ function GetValueByIndex(dict, index) {
     return dict[Object.keys(dict)[index]]
 }
 
+function GetPairByIndex(dict, index) {
+    return (GetKeyByIndex(dict, index), GetValueByIndex(dict, index))
+}
+
 function GetKeyByIndex(dict, index) {
     return Object.keys(dict)[index]
 }
 
 function Resort() {
-    acce = !acce
-    var sorted = CreateCells();
-    DrawTable(quickSort(sorted, 0, Object.keys(sorted).length - 1))
+    ascendig = !ascendig
+    Calculate()
+
+}
+
+function sort() {
+    var items = Object.keys(_cells).map(function (key) {
+        return [_cells[key].goods, _cells[key].bought, _cells[key].numbers];
+    });
+    items.sort(function (first, second) {
+        if (ascendig)
+            return first[2] - second[2];
+        else
+            return second[2] - first[2];
+    });
+    return items
+}
+
+function GetImage(state) {
+    //console.log(state)
+    if (state) {
+        return "files/down.png"
+    }
+    else {
+        return "files/up.png"
+    }
+
 }
 
 function Calculate() {
-    DrawTable(CreateCells())
+
+    DrawTable(sort(CreateCells()))
+    document.getElementById("columnImg").src = GetImage(ascendig)
 }
 
-function DrawTable(data){
+function DrawTable(data) {
     var table = document.getElementById("tableBody");
+    if (table == null) return
     while (table.rows.length > 0) {
         table.deleteRow(0)
     }
 
-console.log(data)
+    //console.log(data)
+    counter = 1
     for (const key in data) {
         var row = table.insertRow(table.rows.length)
-        AddCellToRow(row, 0, key)
-        AddCellToRow(row, 1,data[key])
+        AddCellToRow(row, 0, data[key][0])
+        AddCheckBoxToRow(row, 1, data[key][2], counter, data[key][1])
+        AddCellToRow(row, 2, data[key][2])
+        counter++;
     }
 }
 
 
-function swap(items, leftIndex, rightIndex) {
-    var temp = GetValueByIndex(items, leftIndex);
-    items[GetKeyByIndex(items, leftIndex)] = GetValueByIndex(items, rightIndex);
-    items[GetKeyByIndex(items, rightIndex)] = temp;
-}
-function partition(items, left, right) {
-    var pivot = GetValueByIndex(items, Math.floor((right + left) / 2)), //middle element
-        i = left, //left pointer
-        j = right; //right pointer
-
-    console.log(pivot)
-    while (i <= j) {
-        while (GetValueByIndex(items, i) > pivot) {
-            i++;
-        }
-        while (GetValueByIndex(items, j) < pivot) {
-            j--;
-        }
-        if (i <= j) {
-            swap(items, i, j); //sawpping two elements
-            i++;
-            j--;
-        }
-    }
-    return i;
+function AddCellToRow(row, index, data) {
+    var cell = row.insertCell(index);
+    var newText = document.createTextNode(data)
+    cell.appendChild(newText);
 }
 
-function quickSort(items, left, right) {
-    var index;
-    console.log(Object.keys(items).length)
-    if (Object.keys(items).length > 1) {
-        console.log(items)
-        index = partition(items, left, right); //index returned from partition
-        if (left < index - 1) { //more elements on the left side of the pivot
-            quickSort(items, left, index - 1);
-        }
-        if (index < right) { //more elements on the right side of the pivot
-            quickSort(items, index, right);
-        }
-    }
+function AddCheckBoxToRow(row, index, max, id, value) {
+    var cell = row.insertCell(index);
+    var input = document.createElement("input");
+    input.setAttribute("type", "number");
+    console.log("index " + id)
+    input.setAttribute("onchange", "OnChangeNumber(id, max)")
+    input.setAttribute("id", id)
+    input.setAttribute("size", "3")
+    input.setAttribute("max", max)
+    if (value > 0)
+        input.setAttribute("value", value)
+    cell.appendChild(input);
+}
 
-    return items;
+function OnChangeNumber(id, max) {
+    var element = document.getElementById(id)
+    console.log("checkBoxMarked " + id + " " + element.value)
+    if (element.value > max) element.value = max
+    _full_goods_data[id].bought = element.value
 }

@@ -84,9 +84,13 @@
         <table id="table">
             <thead>
                 <tr>
-                    <th >Goods</th>
-                    <th >count you can buy in one <select id="times" onchange="SetTime(value)">
-                            <script type="text/javascript">ReadDict("times", _times)</script>
+
+                    <th>Goods</th>
+                    <th id="mark">Mark</th>
+                    <th onclick="javascript:Resort()" ><img id="columnImg" src="files/down.png" width="16" height="16"></img>numbers you can buy in one <select id="times" onchange="SetTime(value)">
+                            <script type="text/javascript">
+                                ReadDict("times", _times)
+                            </script>
                         </select></th>
                 </tr>
             </thead>
