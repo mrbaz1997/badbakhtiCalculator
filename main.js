@@ -43,7 +43,7 @@ function GetNumberStep(id, value) {
 
 function InitialJson() {
     for (let i = 0; i < _goods.length; i++) {
-        _full_goods_data.push({"id":i, "good": _goods[i], "bought": 0, "prices": [_iran_price[i], _netherlands_price[i]] })
+        _full_goods_data.push({ "id": i, "good": _goods[i], "bought": 0, "prices": [_iran_price[i], _netherlands_price[i]] })
     }
     //console.log(_full_goods_data)
 }
@@ -66,7 +66,7 @@ function SetTime(value) {
 function CreateCells() {
     var i = 0
     for (const key in _full_goods_data) {
-        _cells[i] = {"id" : _full_goods_data[key].id, "goods": _full_goods_data[key].good, "bought": _full_goods_data[key].bought, "numbers": CalculateGoodCounts(_full_goods_data[key].prices[_selected_region]) }
+        _cells[i] = { "id": _full_goods_data[key].id, "goods": _full_goods_data[key].good, "bought": _full_goods_data[key].bought, "numbers": CalculateGoodCounts(_full_goods_data[key].prices[_selected_region]) }
         i++;
     }
     console.log(_cells);
@@ -97,18 +97,7 @@ function Resort() {
 
 }
 
-function sort() {
-    var items = Object.keys(_cells).map(function (key) {
-        return [_cells[key].goods, _cells[key].bought, _cells[key].numbers];
-    });
-    items.sort(function (first, second) {
-        if (ascendig)
-            return first[2] - second[2];
-        else
-            return second[2] - first[2];
-    });
-    return items
-}
+
 
 function GetImage(state) {
     //console.log(state)
@@ -123,8 +112,23 @@ function GetImage(state) {
 
 function Calculate() {
 
-    DrawTable(sort(CreateCells()))
+    CreateCells()
+    sort()
+    DrawTable()
     document.getElementById("columnImg").src = GetImage(ascendig)
+}
+
+function sort() {
+    var items = Object.keys(_cells).map(function (key) {
+        return [_cells[key].goods, _cells[key].bought, _cells[key].numbers];
+    });
+    items.sort(function (first, second) {
+        if (ascendig)
+            return first[2] - second[2];
+        else
+            return second[2] - first[2];
+    });
+    _cells = items
 }
 
 function DrawTable(data) {
@@ -134,7 +138,6 @@ function DrawTable(data) {
         table.deleteRow(0)
     }
 
-    //console.log(data)
     counter = 1
     for (const key in data) {
         var row = table.insertRow(table.rows.length)
@@ -170,5 +173,7 @@ function OnChangeNumber(id, max) {
     var element = document.getElementById(id)
     console.log("checkBoxMarked " + id + " " + element.value)
     if (element.value > max) element.value = max
+    //console.log(_full_goods_data)
+    console.log(_cells)
     _full_goods_data[id].bought = element.value
 }
